@@ -70,15 +70,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'zibnotify.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
@@ -121,3 +112,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# celery configuration
+CELERY_TIMEZONE = "Iran/Tehran"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 5 * 60
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_RESULT_BACKEND = 'mongodb://zibal:pass123Sec@localhost:27017/'
+CELERY_MONGODB_BACKEND_SETTINGS = {
+    'database': 'zibal_db',
+    'taskmeta_collection': 'tasks',
+
+}
