@@ -1,0 +1,42 @@
+services:
+  reports_service:
+    container_name: reports_service
+    build:
+      - context: ./ziballike
+      - dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      - db
+    command: python manage.py runserver 0.0.0.0:8000
+  db:
+    container_name: zibdb
+    image: mongo:latest
+    ports:
+      - 27017:27017
+    restart: always
+    volumes:
+      - ./_db/data/:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=zibal
+      - MONGO_INITDB_ROOT_PASSWORD=pass123Sec
+  notification_service:
+    container_name: notification_service
+    build:
+      - context: ./zibnotify
+      - dockerfile: ./Dockerfile
+    ports:
+      - "8080:8000"
+    restart: always
+    depends_on:
+      - db
+      - broker
+  broker:
+    container_name: broker
+    image: rabbitmq:latest
+    ports:
+      - 5672:5672
+    volumes:
+      - ./_broker/logs:/var/log/rabbitmq/
+      - ./_broker/mnesia:/var/log/rabbitmq/mnesia/
