@@ -2,8 +2,8 @@ services:
   reports_service:
     container_name: reports_service
     build:
-      - context: ./ziballike
-      - dockerfile: ./Dockerfile
+      context: ./ziballike
+      dockerfile: ./Dockerfile
     ports:
       - 8000:8000
     restart: always
@@ -13,7 +13,7 @@ services:
       - ./ziballike:/app
     command: python manage.py runserver 0.0.0.0:8000
   db:
-    container_name: zibdb
+    container_name: db
     image: mongo:latest
     ports:
       - 27017:27017
@@ -26,8 +26,8 @@ services:
   notification_service:
     container_name: notification_service
     build:
-      - context: ./zibnotify
-      - dockerfile: ./Dockerfile
+      context: ./zibnotify
+      dockerfile: ./Dockerfile
     ports:
       - "8080:8000"
     restart: always
@@ -39,6 +39,10 @@ services:
   broker:
     container_name: broker
     image: rabbitmq:latest
+    environment:
+      - RABBITMQ_DEFAULT_USER=zibal
+      - RABBITMQ_DEFAULT_PASS=pass123Sec
+      - RABBITMQ_DEFAULT_VHOST=zibalecho
     ports:
       - 5672:5672
     volumes:
@@ -47,8 +51,8 @@ services:
   celery_worker:
     container_name: celery_worker
     build:
-      - context: ./zibnotify
-      - dockerfile: ./Dockerfile
+      context: ./zibnotify
+      dockerfile: ./Dockerfile
     restart: always
     depends_on:
       - broker

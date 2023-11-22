@@ -8,4 +8,6 @@ COPY . .
 
 RUN python -m pip install --upgrade pip
 
+RUN pip install "setuptools<58.0.0" wheel
+
 RUN pip install -r reqs.txt
