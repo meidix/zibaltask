@@ -9,6 +9,8 @@ services:
     restart: always
     depends_on:
       - db
+    volumes:
+      - ./ziballike:/app
     command: python manage.py runserver 0.0.0.0:8000
   db:
     container_name: zibdb
@@ -29,9 +31,11 @@ services:
     ports:
       - "8080:8000"
     restart: always
+    volumes:
+      - ./zibnotify:/app
     depends_on:
       - db
-      - broker
+    command: python manage.py runserver 0.0.0.0:8000
   broker:
     container_name: broker
     image: rabbitmq:latest
@@ -40,3 +44,13 @@ services:
     volumes:
       - ./_broker/logs:/var/log/rabbitmq/
       - ./_broker/mnesia:/var/log/rabbitmq/mnesia/
+  celery_worker:
+    container_name: celery_worker
+    build:
+      - context: ./zibnotify
+      - dockerfile: ./Dockerfile
+    restart: always
+    depends_on:
+      - broker
+      - db
+    command: celery -A proj worker -l INFO
