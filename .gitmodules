@@ -1,0 +1,3 @@
+[submodule "ziballike"]
+	path = ziballike
+	url = git@github.com:meidix/ziballike.git
