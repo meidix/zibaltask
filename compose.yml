@@ -57,4 +57,4 @@ services:
     depends_on:
       - broker
       - db
-    command: celery -A proj worker -l INFO
+    command: celery -A zibnotify worker -l INFO
