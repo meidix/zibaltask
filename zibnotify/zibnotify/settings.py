@@ -114,12 +114,12 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # celery configuration
-CELERY_TIMEZONE = "Iran/Tehran"
+CELERY_TIMEZONE = "Asia/Tehran"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 5 * 60
 CELERY_TASK_ACKS_LATE = True
-CELERY_TASK_RESULT_BACKEND = 'mongodb://zibal:pass123Sec@localhost:27017/'
-CELERY_BROKER_URL = 'amqp://zibal:pass123Sec@localhost:5672/zibalecho'
+CELERY_TASK_RESULT_BACKEND = 'mongodb://zibal:pass123Sec@db:27017/'
+CELERY_BROKER_URL = 'amqp://zibal:pass123Sec@broker:5672/zibalecho'
 CELERY_MONGODB_BACKEND_SETTINGS = {
     'database': 'zibal_db',
     'taskmeta_collection': 'tasks',
