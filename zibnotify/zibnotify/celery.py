@@ -29,7 +29,7 @@ def send_push_notification(receiver, messege):
     return f"Push Notification to {receiver}: {messege}"
 
 
-notifier = NotificationManager()
+notifier = NotificationManager('mongodb://zibal:pass123Sec@db:27017', 'zibal_db', 'celery_tasks')
 notifier.register('sms', send_sms)
 notifier.register('email', send_email)
 notifier.register('push_notification', send_push_notification)
