@@ -22,10 +22,10 @@ docker compose exec -it reports_service python manage.py summarizetransaction
 
 This service also uses the `celery beat` container to generate daily reports of each merchant's transaction, and sending it to the merchant using the second `django` app which we will discuss later. The API documentation is available at :
 
-- Reports Service API Documentation: [https://documenter.getpostman.com/view/25449104/2s9YeD7YB6]
+- [Reports Service API Documentation](https://documenter.getpostman.com/view/25449104/2s9YeD7YB6)
 
 # Notification Service
 
 This `django` app provides API endpoints for asynchronous notification sending and notification management. It uses celery and `rabiitmq` to asynchrounously send notification, and its tolerant to network failures, and makes sure that the notification is sent to the user **_exactly once_**. It provides a simple API schema to use for sedning notifications. This service is used by the _reports service_ to deliver the transaction summaries to merchants. This communication between the two services are done through the RESTful API that is provided by this app. The API Documentation for the notification service is available at:
 
-- Notification Service API Documentation: [https://documenter.getpostman.com/view/25449104/2s9YeD7YKu]
+- [Notification Service API Documentation](https://documenter.getpostman.com/view/25449104/2s9YeD7YKu)
