@@ -16,7 +16,7 @@ app.autodiscover_tasks()
 def debug_task(self):
     print(f"Request: {self.request!r}")
 
-@app.task(bind=True)
+@app.task(bind=True, queue='notification_queue')
 def send_sms(self, notif):
     try:
         sms = SMSNotification.from_dict(notif)
@@ -24,7 +24,7 @@ def send_sms(self, notif):
     except:
         self.retry()
 
-@app.task(bind=True)
+@app.task(bind=True, queue='notification_queue')
 def send_email(self, notif):
     try:
         mail = EmailNotification.from_dict(notif)
@@ -32,7 +32,7 @@ def send_email(self, notif):
     except:
         self.retry()
 
-@app.task(bind=True)
+@app.task(bind=True, queue='notification_queue')
 def send_push_notification(self, notif):
     try:
         pn = PushNotification.from_dict(notif)

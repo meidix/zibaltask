@@ -57,7 +57,7 @@ services:
     depends_on:
       - broker
       - db
-    command: celery -A zibnotify worker -l INFO
+    command: celery -A zibnotify worker -l INFO -Q notification_queue
   celery_beat:
     container_name: celery_beat
     build:
@@ -77,4 +77,4 @@ services:
     depends_on:
       - broker
       - db
-    command: celery -A ziballike worker -l INFO
+    command: celery -A ziballike worker -l INFO -Q reports_queue
