@@ -23,8 +23,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=zibal
       - MONGO_INITDB_ROOT_PASSWORD=pass123Sec
-  notification_service:
-    container_name: notification_service
+  notification-service:
+    container_name: notification-service
     build:
       context: ./zibnotify
       dockerfile: ./Dockerfile
@@ -48,8 +48,8 @@ services:
     volumes:
       - ./_broker/logs:/var/log/rabbitmq/
       - ./_broker/mnesia:/var/log/rabbitmq/mnesia/
-  celery_worker:
-    container_name: celery_worker
+  celery_notifier:
+    container_name: celery_notifier
     build:
       context: ./zibnotify
       dockerfile: ./Dockerfile
@@ -58,3 +58,23 @@ services:
       - broker
       - db
     command: celery -A zibnotify worker -l INFO
+  celery_beat:
+    container_name: celery_beat
+    build:
+      context: ./ziballike
+      dockerfile: ./Dockerfile
+    restart: always
+    depends_on:
+      - broker
+      - db
+    command: celery -A ziballike beat
+  celery_reporter:
+    container_name: celery_reporter
+    build:
+      context: ./ziballike
+      dockerfile: ./Dockerfile
+    restart: always
+    depends_on:
+      - broker
+      - db
+    command: celery -A ziballike worker -l INFO

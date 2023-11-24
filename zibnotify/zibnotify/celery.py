@@ -1,7 +1,7 @@
 import os
 
 from celery import Celery
-from .notification import NotificationManager
+from .notification import NotificationManager, SMSNotification, EmailNotification, PushNotification
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'zibnotify.settings')
 
@@ -17,16 +17,28 @@ def debug_task(self):
     print(f"Request: {self.request!r}")
 
 @app.task(bind=True)
-def send_sms(receiver, messege):
-    return f"SMS to {receiver}: {messege}"
+def send_sms(self, notif):
+    try:
+        sms = SMSNotification.from_dict(notif)
+        return f"via SMS: {str(sms)}"
+    except:
+        self.retry()
 
 @app.task(bind=True)
-def send_email(receiver, messege):
-    return f"Email to {receiver}: {messege}"
+def send_email(self, notif):
+    try:
+        mail = EmailNotification.from_dict(notif)
+        return f"via Email: {str(mail)}"
+    except:
+        self.retry()
 
 @app.task(bind=True)
-def send_push_notification(receiver, messege):
-    return f"Push Notification to {receiver}: {messege}"
+def send_push_notification(self, notif):
+    try:
+        pn = PushNotification.from_dict(notif)
+        return f"Via Push Notification : {str(pn)}"
+    except:
+        self.retry()
 
 
 notifier = NotificationManager('mongodb://zibal:pass123Sec@db:27017', 'zibal_db', 'celery_tasks')

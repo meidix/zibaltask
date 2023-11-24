@@ -16,13 +16,53 @@ class NotificationManager:
     def register(self, medium_name, send_handler):
         self.mediums[medium_name] = send_handler
 
-    def notify(self, medium_name, receiver, messege):
+    def notify(self, medium_name, notification):
         if medium_name not in self.mediums:
             raise Exception("No such medium registered")
 
         handler = self.mediums[medium_name]
-        return handler.delay((receiver, messege)).task_id
+        return handler.delay(notification).task_id
 
     def follow(self, task_id):
         task = self.db.find_one({ '_id': task_id})
         return task
+
+
+class BaseNotification:
+
+    def __init__(self, receiver, messege):
+        self.receiver = receiver
+        self.messege = messege
+
+    def to_dict(self):
+        return {
+            'receiver': self.receiver,
+            'messege': self.messege
+        }
+
+    def __repr__(self) -> str:
+        return f'deliver {self.messege} to {self.receiver}'
+
+    @classmethod
+    def from_dict(cls, dict_data):
+        return cls(**dict_data)
+
+
+class EmailNotification(BaseNotification):
+
+    def __init__(self, receiver, subject, messege):
+        super().__init__(receiver, messege)
+        self.subject = subject
+
+    def to_dict(self):
+        res = super().to_dict()
+        res.update({
+            'subject': self.subject
+        })
+        return res
+
+class PushNotification(BaseNotification):
+    pass
+
+class SMSNotification(BaseNotification):
+    pass
