@@ -18,11 +18,11 @@ class NotificationService(View):
             return response.to_json_response()
 
     def post(self, request, *args, **kwargs):
-        # try:
+        try:
             req = Request(request)
             res = manager.notify(req.params['medium'], req.params['payload'])
             response = Response({'taskId': res}, 200)
             return response.to_json_response()
-        # except:
-        #     response = Response({'error': "An error occured"}, 400)
-        #     return response.to_json_response()
+        except:
+            response = Response({'error': "An error occured"}, 400)
+            return response.to_json_response()
