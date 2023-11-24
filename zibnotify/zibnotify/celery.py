@@ -21,24 +21,24 @@ def send_sms(self, notif):
     try:
         sms = SMSNotification.from_dict(notif)
         return f"via SMS: {str(sms)}"
-    except:
-        self.retry()
+    except Exception as e:
+        self.retry(exc=e)
 
 @app.task(bind=True, queue='notification_queue', max_retries=5)
 def send_email(self, notif):
     try:
         mail = EmailNotification.from_dict(notif)
         return f"via Email: {str(mail)}"
-    except:
-        self.retry()
+    except Exception as e:
+        self.retry(exc=e)
 
 @app.task(bind=True, queue='notification_queue', max_retries=5)
 def send_push_notification(self, notif):
     try:
         pn = PushNotification.from_dict(notif)
         return f"Via Push Notification : {str(pn)}"
-    except:
-        self.retry()
+    except Exception as e:
+        self.retry(exc=e)
 
 
 notifier = NotificationManager('mongodb://zibal:pass123Sec@db:27017', 'zibal_db', 'celery_tasks')
